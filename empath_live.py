@@ -3,15 +3,14 @@ import wave
 import json
 import urllib3
 import requests
-import numpy as np
 
 
 # Sound parameters:
 filename = "stream.wav"
-chunk = 1024  # Record in chunks of 1024 samples
+chunk = 4098  # Record in chunks of 1024 samples
 sample_format = pyaudio.paInt16  # 16 bits per sample
 channels = 1
-fs = 11025  # Record at 44100 samples per second
+fs = 44100  # Record at 44100 samples per second
 seconds = 4
 p = pyaudio.PyAudio()  # Create an interface to PortAudio
 http = urllib3.PoolManager()
@@ -22,6 +21,7 @@ stream = p.open(format=sample_format,
                 channels=channels,
                 rate=fs,
                 frames_per_buffer=chunk,
+		input_device_index=2,
                 input=True)
 
 frames = []  # Initialize array to store frames
@@ -31,6 +31,7 @@ while True:
                     channels=channels,
                     rate=fs,
                     frames_per_buffer=chunk,
+		    input_device_index=2,
                     input=True)
     # Store data in chunks for 3 second:
     for i in range(0, int(fs / chunk * seconds)):
